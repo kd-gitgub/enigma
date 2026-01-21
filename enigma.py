@@ -18,6 +18,29 @@ class PlugLead:
             return character
 
 
+
+
+class Plugboard:
+    def __init__(self):
+        # Initialize empty list of plug leads
+        self.leads = []
+
+    def add(self, lead):
+        # Add a PlugLead to the plugboard (max 10 allowed)
+        if len(self.leads) >= 10:
+            raise ValueError("Plugboard can only have 10 leads")
+        self.leads.append(lead)
+
+    def encode(self, character):
+        # Pass character through each lead
+        for lead in self.leads:
+            result = lead.encode(character)
+            # If the character was changed, return immediately
+            if result != character:
+                return result
+        # No lead affected this character, return unchanged
+        return character
+    
 # You will need to write more classes, which can be done here or in separate files, you choose.
 
 
