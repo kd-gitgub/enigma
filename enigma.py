@@ -57,7 +57,61 @@ class Reflector:
     
 
 
-    
+
+
+class Rotor:
+    def __init__(self, wiring, notch):
+        # wiring is a 26-character string mapping A-Z
+        # notch is the position that triggers the next rotor to turn
+        self.wiring = wiring
+        self.notch = notch
+        self.position = 0  # Current rotation position (0-25)
+
+    def encode_right_to_left(self, character):
+        # Signal going toward reflector
+        index = ord(character) - ord('A')
+        # Apply position offset
+        index = (index + self.position) % 26
+        # Get the encoded character from wiring
+        encoded = self.wiring[index]
+        # Remove position offset
+        result_index = (ord(encoded) - ord('A') - self.position) % 26
+        return chr(result_index + ord('A'))
+
+    def encode_left_to_right(self, character):
+        # Signal returning from reflector (reverse lookup)
+        index = ord(character) - ord('A')
+        # Apply position offset
+        index = (index + self.position) % 26
+        char_to_find = chr(index + ord('A'))
+        # Find where this character appears in the wiring
+        wiring_index = self.wiring.index(char_to_find)
+        # Remove position offset
+        result_index = (wiring_index - self.position) % 26
+        return chr(result_index + ord('A'))
+
+    def rotate(self):
+        self.position = (self.position + 1) % 26
+
+    def at_notch(self):
+        return chr(self.position + ord('A')) == self.notch
+
+
+# Historical rotor wirings
+ROTOR_WIRINGS = {
+    "I": ("EKMFLGDQVZNTOWYHXUSPAIBRCJ", "Q"),
+    "II": ("AJDKSIRUXBLHWTMCQGZNPYFVOE", "E"),
+    "III": ("BDFHJLCPRTXVZNYEIWGAKMUSQO", "V"),
+    "IV": ("ESOVPZJAYQUIRHXLNFTGKDCMWB", "J"),
+    "V": ("VZBRGITYUPSDNHLXAWMJQOFECK", "Z"),
+}
+
+
+def rotor_from_name(name):
+    wiring, notch = ROTOR_WIRINGS[name]
+    return Rotor(wiring, notch)
+
+
 # You will need to write more classes, which can be done here or in separate files, you choose.
 
 
