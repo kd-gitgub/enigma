@@ -41,6 +41,23 @@ class Plugboard:
         # No lead affected this character, return unchanged
         return character
     
+
+
+
+class Reflector:
+    def __init__(self, wiring):
+        # wiring is a 26-character string mapping A-Z
+        self.wiring = wiring
+
+    def encode(self, character):
+        # Find the index of the character (A=0, B=1, etc.)
+        index = ord(character) - ord('A')
+        # Return the character at that position in the wiring
+        return self.wiring[index]
+    
+
+
+    
 # You will need to write more classes, which can be done here or in separate files, you choose.
 
 
